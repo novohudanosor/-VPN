@@ -63,4 +63,22 @@ status /var/log/openvpn-status.log
 log /var/log/openvpn.log
 verb 3
 ```
-7. 
+7. Сгенерированный файл на сервере **/etc/openvpn/static.key**  копируем на клиента в директорию /etc/openvpn/
+8. На клиенте создаем такой же systemd модуль, и запускаем.
+```
+nano /etc/systemd/system/openvpn@.service
+cat /etc/systemd/system/openvpn@.service
+[Unit]
+Description=OpenVPN Tunneling Application On %I
+After=network.target
+[Service]
+Type=notify
+PrivateTmp=true
+ExecStart=/usr/sbin/openvpn --cd /etc/openvpn/ --config %i.conf
+[Install]
+WantedBy=multi-user.target
+
+systemctl start openvpn@server
+systemctl enable openvpn@server
+```
+9. 
